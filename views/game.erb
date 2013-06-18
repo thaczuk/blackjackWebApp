@@ -18,3 +18,21 @@ Remaining cards: <%= session[:deck].size %>
   <% end %>
 </ul>
 </p>
+
+
+<% session[:dealer_cards].each do |suit, value| %>
+<% case suit
+      when 'H' then params[:img] = 'hearts_'
+      when 'D' then params[:img] = 'diamonds_'
+      when 'S' then params[:img] = 'spades_'
+      when 'C' then params[:img] = 'clubs_'
+      end %>
+
+      Suit: <%= params[:img].to_s %>
+      Card value: <%=  value.to_s %>
+      <br />
+<% end %>
+<img src=<% params[:img] %>/>
+
+
+

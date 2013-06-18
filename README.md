@@ -1,4 +1,4 @@
 blackjackWebApp
 ===============
 
-Blackjack Web App using Sinatra
+Blackjack Web App using Ruby, Sinatra & Twitter Bootstrap

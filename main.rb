@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'rubygems'
 require 'sinatra'
+require 'pry'
 
 set :sessions, true
 
