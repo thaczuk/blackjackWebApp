@@ -92,12 +92,6 @@ helpers do
     @alert_type = 'alert-error'
     @game_over = true
   end
-
-  def bust!
-    @alert_message = 'Bust! You lose.'
-    @alert_type = 'alert-error'
-    @game_over = true
-  end
 end
 
 get '/' do
@@ -134,9 +128,9 @@ post '/hit' do
   if total(session[:player_cards]) == BLACKJACK_AMOUNT
     blackjack!
   elsif total(session[:player_cards]) > BLACKJACK_AMOUNT
-    bust!
+    lose!("You bust with #{total(session[:player_cards])}.")
   end
-  erb :game
+  erb :game, layout: false
 end
 
 post '/stay' do

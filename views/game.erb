@@ -1,114 +1,116 @@
-<% if @game_over %>
-<div class="hero-unit">
-  <h3>Would you like to play again <%= session[:player_name] %>?</h3>
-  <% if session[:player_pot] == 0 %>
-      You have no money! Back to work!
+<div id="game">
+  <% if @alert_message %>
+      <div class="alert <%= @alert_type %>"><%= @alert_message %></div>
+    <% end %>
+
+  <% if @game_over %>
+  <div class="hero-unit">
+    <h3>Would you like to play again <%= session[:player_name] %>?</h3>
+    <% if session[:player_pot] == 0 %>
+        You have no money! Back to work!
+      <div class="row-fluid">
+        <div class="span12">
+          <form action='/new_player'>
+           <button type="submit" class="btn btn-large btn-success btn-block" >New game</button>
+         </form>
+       </div>
+     </div>
+    <% else %>
+      You have $<%= session[:player_pot]  %> remaining.
     <div class="row-fluid">
       <div class="span12">
-        <form action='/new_player'>
-         <button type="submit" class="btn btn-large btn-success btn-block" >New game</button>
+        <form action='/bet'>
+          <button type="submit" class="btn btn-large btn-success btn-block" >Play again</button>
        </form>
-     </div>
-   </div>
-  <% else %>
-    You have $<%= session[:player_pot]  %> remaining.
+      </div>
+    </div>
+    <% end %>
+  </div>
   <div class="row-fluid">
     <div class="span12">
-      <form action='/bet'>
-        <button type="submit" class="btn btn-large btn-success btn-block" >Play again</button>
-     </form>
-    </div>
-  </div>
-  <% end %>
-</div>
-<div class="row-fluid">
-  <div class="span12">
-    <div class="row-fluid">
-      <div class="span6">
-         <h4>Player's total: <%= total(session[:player_cards]) %></h4>
-        <div class="row-fluid">
-          <% session[:player_cards].each do |card| %>
-            <%= card_image(card) %>
-          <% end %>
-        </div>
-       </div>
-      <div class="span6">
-        <% if @game_over == true %>
-          <h4>Dealer's total: <%= total(session[:dealer_cards]) %></h4>
-        <% else %>
-          <h4>Dealer's cards:</h4>
-        <% end %>
-         <div class="row-fluid">
-            <% if @game_over == true %>
-              <% session[:dealer_cards].each do |card| %>
-                <%= card_image(card) %>
-              <% end %>
-            <% else %>
-              <img src="/images/cards/cover.jpg" class="fixed_width" />
-              <%= card_image(session[:dealer_cards].at(1)) %>
+      <div class="row-fluid">
+        <div id="player_cards" class="span6">
+           <h4>Player's total: <%= total(session[:player_cards]) %></h4>
+          <div class="row-fluid">
+            <% session[:player_cards].each do |card| %>
+              <%= card_image(card) %>
             <% end %>
           </div>
+         </div>
+        <div id="dealer_cards" class="span6">
+          <% if @game_over == true %>
+            <h4>Dealer's total: <%= total(session[:dealer_cards]) %></h4>
+          <% else %>
+            <h4>Dealer's cards:</h4>
+          <% end %>
+           <div class="row-fluid">
+              <% if @game_over == true %>
+                <% session[:dealer_cards].each do |card| %>
+                  <%= card_image(card) %>
+                <% end %>
+              <% else %>
+                <img src="/images/cards/cover.jpg" class="fixed_width" />
+                <%= card_image(session[:dealer_cards].at(1)) %>
+              <% end %>
+            </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<% else %>
-<div class="hero-unit">
-<h3>Your turn <%= session[:player_name] %>.</h3>
-You have $<%= session[:player_pot]  %> and bet $<%= session[:player_bet] %>. <br />
-Would you like to hit or stay?
+  <% else %>
+  <div class="hero-unit">
+  <h3>Your turn <%= session[:player_name] %>.</h3>
+  You have $<%= session[:player_pot]  %> and bet $<%= session[:player_bet] %>. <br />
+  Would you like to hit or stay?
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="row-fluid">
+          <div class="span6">
+            <form id="stay_form" action='/stay' method="post" >
+              <button type="submit" class="btn btn-large btn-success btn-block" >Stay</button>
+            </form>
+          </div>
+          <div class="span6">
+            <form id="hit_form" action='/hit' method="post" >
+              <button type="submit" class="btn btn-large btn-warning btn-block">Hit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="row-fluid">
     <div class="span12">
       <div class="row-fluid">
         <div class="span6">
-          <form action='/stay' method="post" >
-            <fieldset>
-              <button type="submit" class="btn btn-large btn-success btn-block" >Stay</button>
-            </fieldset>
-          </form>
-        </div>
-        <div class="span6">
-          <form action='/hit' method="post" >
-          <fieldset>
-            <button type="submit" class="btn btn-large btn-warning btn-block">Hit</button>
-          </fieldset>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="row-fluid">
-  <div class="span12">
-    <div class="row-fluid">
-      <div class="span6">
-         <h4>Player's total: <%= total(session[:player_cards]) %></h4>
-        <div class="row-fluid">
-          <% session[:player_cards].each do |card| %>
-            <%= card_image(card) %>
-          <% end %>
-        </div>
-       </div>
-      <div class="span6">
-        <% if @game_over == true %>
-          <h4>Dealer's total: <%= total(session[:dealer_cards]) %></h4>
-        <% else %>
-          <h4>Dealer's cards:</h4>
-        <% end %>
-         <div class="row-fluid">
-            <% if @game_over == true %>
-              <% session[:dealer_cards].each do |card| %>
-                <%= card_image(card) %>
-              <% end %>
-            <% else %>
-              <img src="/images/cards/cover.jpg" class="fixed_width" />
-              <img src="/images/cards/<%= find_suit(session[:dealer_cards][1][0]) %>_<%= find_face_value(session[:dealer_cards][1][1]) %>.jpg" class="fixed_width" />
+           <h4>Player's total: <%= total(session[:player_cards]) %></h4>
+          <div class="row-fluid">
+            <% session[:player_cards].each do |card| %>
+              <%= card_image(card) %>
             <% end %>
           </div>
+         </div>
+        <div class="span6">
+          <% if @game_over == true %>
+            <h4>Dealer's total: <%= total(session[:dealer_cards]) %></h4>
+          <% else %>
+            <h4>Dealer's cards:</h4>
+          <% end %>
+           <div class="row-fluid">
+              <% if @game_over == true %>
+                <% session[:dealer_cards].each do |card| %>
+                  <%= card_image(card) %>
+                <% end %>
+              <% else %>
+                <img src="/images/cards/cover.jpg" class="fixed_width" />
+                <img src="/images/cards/<%= find_suit(session[:dealer_cards][1][0]) %>_<%= find_face_value(session[:dealer_cards][1][1]) %>.jpg" class="fixed_width" />
+              <% end %>
+            </div>
+        </div>
       </div>
     </div>
   </div>
+  <% end %>
 </div>
-<% end %>
